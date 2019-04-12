@@ -14,6 +14,8 @@ class TruliooForm extends React.Component {
     }
 
     handleChange = (e) => {
+        console.log("change")
+        console.log(e)
         let shouldUpdateFormData = (this.props.fields.formData === undefined) || (e.formData.countries !== this.props.fields.formData.countries)
         if (shouldUpdateFormData) {
             this.props.getFields(e.formData.countries)
@@ -21,13 +23,14 @@ class TruliooForm extends React.Component {
     }
 
     handleSubmit = (e) => {
+        console.log(e.formData)
         this.props.submitForm(e).then(res => {
             this.props.handleResponse(res)
         })
     }
 
     triggerSubmitResponse = (e) => {
-        this.props.handleResponse(e)
+        // this.props.handleResponse(e)
     }
 
     render() {
@@ -55,13 +58,20 @@ const mapStateToProps = (state) => {
             },
         }
     }
-    if (state.fields && state.fields.fields && state.fields.fields.properties) {
-        schema.properties.Properties = {
-            title: "Properties",
-            type: "object",
-            properties: state.fields && state.fields.fields && state.fields.fields.properties
+    if (state.fields && state.fields.fields) {
+        if (state.fields.fields.properties) {
+            schema.properties.Properties = {
+                title: "Properties",
+                type: "object",
+                properties: state.fields && state.fields.fields && state.fields.fields.properties
+            }
         }
-    }
+        if (state.fields.fields.Consents) {
+            schema.properties.Consents = state.fields.fields.Consents
+        }
+    } 
+
+    console.log(schema)
     return {
         fields: state.fields,
         schema,

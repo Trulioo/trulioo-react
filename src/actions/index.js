@@ -22,14 +22,17 @@ export const getFields = countryCode => async dispatch => {
     let fields = await requestFields(countryCode)
     let subdivisions = await requestSubdivisions(countryCode)
     let consents = await requestConsents(countryCode)
+    // let consentFields = generateConsentSchema(consents)
+    appendConsentFields(fields, consents)
     if (fields && fields.properties) {
         recursivelyUpdateStateProvince(fields.properties, subdivisions)
     }
+    console.log({...fields})
     dispatch({
         type: GET_FIELDS,
         payload: {
+            // fields: {...fields, ...consentFields},
             fields,
-            consents,
             formData: {
                 countries: countryCode,
             }
@@ -58,6 +61,18 @@ const requestSubdivisions = async countryCode => {
     return subdivisions.sort(subdivisionComparator)
 }
 
+const subdivisionComparator = (a, b) => {
+    let nameA = a.Name.toUpperCase()
+    let nameB = b.Name.toUpperCase()
+    if (nameA < nameB) {
+        return -1
+    }
+    if (nameA > nameB) {
+        return 1
+    }
+    return 0
+}
+
 const requestConsents = async countryCode => {
     if (countryCode === '' || !countryCode) {
         return
@@ -69,16 +84,24 @@ const requestConsents = async countryCode => {
     return consents
 }
 
-const subdivisionComparator = (a, b) => {
-    let nameA = a.Name.toUpperCase()
-    let nameB = b.Name.toUpperCase()
-    if (nameA < nameB) {
-        return -1
+const appendConsentFields = (fields, consents) => {
+    if (consents === undefined || consents.length <= 0) {
+        return 
     }
-    if (nameA > nameB) {
-        return 1
-    }
-    return 0
+    fields.Consents = generateConsentSchema(consents)
+}
+
+const generateConsentSchema = consents => {
+    let schema = {
+        title: "Consents",
+        type: "object",
+        properties: {
+        }
+    };
+    consents.forEach(x => {
+        schema.properties[x] = {title: x,  type: "boolean", default: false}
+    })
+    return schema
 }
 
 const recursivelyUpdateStateProvince = (obj, subdivisions) => {
@@ -110,8 +133,23 @@ const getBody = form => {
         "AcceptTruliooTermsAndConditions": true,
         "CleansedAddress": true,
         "ConfigurationName": "Identity Verification",
-        "CountryCode": countryCode, "DataFields": form.Properties
+        "CountryCode": countryCode, 
+        "DataFields": form.Properties,
+        "ConsentForDataSources": parseConsents(form.Consents)
     }
+}
+
+const parseConsents = consents => {
+    let result = []
+    if (consents === undefined) {
+        return result
+    }
+    Object.keys(consents).forEach(x => {
+        if (consents[x]) {
+            result.push(x)
+        }
+    }) 
+    return result
 }
 
 const parseFormDataAdditionalFields = (obj, formData) => {
@@ -150,6 +188,7 @@ const findObjInFormDataByKey = (formData, wantedKey) => {
 export const submitForm = (form) => async () => {
     parseFormDataAdditionalFields(originFieldsResponse, form.formData)
     const body = getBody(form.formData)
+    console.log(body)
     const URL = `${BASE_URL}/api/verify`
     const promiseResult = await axios.post(URL, body).then(response => {
         return {
@@ -225,7 +264,7 @@ const parseFields = (obj) => {
 
 const parseAdditionalFieldRequired = (obj, key) => {
     if (key === 'NationalIds') {
-        obj.NationalIds.required = obj.NationalIds.required.filter(element => element !== 'nationalid').concat('Type', 'Number')
+        obj.NationalIds.required = obj.NationalIds.required.filter(element => element !== 'nationalid' && element !=='socialservice').concat('Type', 'Number')
     }
 }
 
