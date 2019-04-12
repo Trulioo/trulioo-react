@@ -21,7 +21,7 @@ export const getFields = countryCode => async dispatch => {
     }
     let fields = await requestFields(countryCode)
     let subdivisions = await requestSubdivisions(countryCode)
-    // let consents = await requestConsents(countryCode)
+    let consents = await requestConsents(countryCode)
     if (fields && fields.properties) {
         recursivelyUpdateStateProvince(fields.properties, subdivisions)
     }
@@ -29,7 +29,7 @@ export const getFields = countryCode => async dispatch => {
         type: GET_FIELDS,
         payload: {
             fields,
-            // consents,
+            consents,
             formData: {
                 countries: countryCode,
             }
@@ -64,6 +64,7 @@ const requestConsents = async countryCode => {
     }
     const URL = `${BASE_URL}/api/getConsents/${countryCode}`
     let response =  await axios.get(URL)
+    // console.log(response)
     let consents = JSON.parse(response.data.response)
     return consents
 }

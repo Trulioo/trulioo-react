@@ -14,7 +14,7 @@ it('countryCodes endpoint works', async done => {
 })
 
 it('getConsents endpoint works', async done => {
-    const country = 'US'
+    const country = 'IN'
     const endpoint = '/api/getConsents/' + country
     const response = await makeRequest(endpoint)
     expect(response).toBeTruthy()
