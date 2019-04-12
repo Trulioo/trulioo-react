@@ -1,17 +1,29 @@
 import axios from 'axios';
 
-// note: proxy server must be running for this integration test to pass successfully 
-it('makes requests to backend', async (done) => {
-    expect.assertions(1);
-    const response = await requestCountries()
+// note: proxy server must be running for these integration tests to pass successfully 
+
+// adjust the BASE_URL to match the address of your proxy server
+const BASE_URL = "http://localhost:3111"
+
+it('countryCodes endpoint works', async done => {
+    const endpoint = '/api/countryCodes'
+    const response = await makeRequest(endpoint)
     expect(response).toBeTruthy()
+    expect.assertions(1);
     done()
 })
 
-// adjust the BASE_URL to match the address of your proxy server
-const requestCountries = async () => {
-    const BASE_URL = "http://localhost:3111"
-    const URL = `${BASE_URL}/api/countryCodes`
+it('getConsents endpoint works', async done => {
+    const country = 'US'
+    const endpoint = '/api/getConsents/' + country
+    const response = await makeRequest(endpoint)
+    expect(response).toBeTruthy()
+    expect.assertions(1);
+    done()
+})
+
+const makeRequest = async endpoint => {
+    const URL = BASE_URL + endpoint
     try {
         let response = await axios.get(URL)
         return response

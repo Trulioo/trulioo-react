@@ -1,5 +1,5 @@
 import React from 'react';
-import App from './App';
+import TruliooForm from './components/TruliooForm';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import reduxThunk from 'redux-thunk';
@@ -13,6 +13,6 @@ const store = createStore(
 
 export default function EmbedID(props) {
     return <Provider store={store}>
-        <App handleResponse={props.handleResponse} url={props.url} />
+        <TruliooForm handleResponse={props.handleResponse} url={props.url} />
     </Provider>
 }

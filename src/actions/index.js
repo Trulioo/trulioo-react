@@ -21,13 +21,15 @@ export const getFields = countryCode => async dispatch => {
     }
     let fields = await requestFields(countryCode)
     let subdivisions = await requestSubdivisions(countryCode)
+    // let consents = await requestConsents(countryCode)
     if (fields && fields.properties) {
         recursivelyUpdateStateProvince(fields.properties, subdivisions)
     }
     dispatch({
         type: GET_FIELDS,
         payload: {
-            fields: fields,
+            fields,
+            // consents,
             formData: {
                 countries: countryCode,
             }
@@ -54,6 +56,16 @@ const requestSubdivisions = async countryCode => {
     let response =  await axios.get(URL)
     let subdivisions = JSON.parse(response.data.response)
     return subdivisions.sort(subdivisionComparator)
+}
+
+const requestConsents = async countryCode => {
+    if (countryCode === '' || !countryCode) {
+        return
+    }
+    const URL = `${BASE_URL}/api/getConsents/${countryCode}`
+    let response =  await axios.get(URL)
+    let consents = JSON.parse(response.data.response)
+    return consents
 }
 
 const subdivisionComparator = (a, b) => {
