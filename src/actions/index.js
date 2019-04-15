@@ -55,7 +55,7 @@ const requestSubdivisions = async countryCode => {
     if (countryCode === '' || !countryCode) {
         return
     }
-    const URL = `${BASE_URL}/api/countrysubdivisions/${countryCode}`
+    const URL = `${BASE_URL}/api/getCountrySubdivisions/${countryCode}`
     let response =  await axios.get(URL)
     let subdivisions = JSON.parse(response.data.response)
     return subdivisions.sort(subdivisionComparator)
