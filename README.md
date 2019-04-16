@@ -37,6 +37,11 @@ Trulioo EmbedID passes user input data to the "proxy" on your server. When devel
 If you want to collect data not included in EmbedID, you can define your own custom fields using the `customFields` prop. You can also pass a callback method using the `handleSubmit` prop to handle this data on submission. 
 
 ```
+// callback method to handle the Trulioo verification response 
+const handleResponse = (e) => {
+    console.log("Response from Trulioo: ", e)
+}
+
 // callback method to handle form data on submit
 const handleSubmit = (e) => {
     console.log("Submitted form: ", e)
@@ -62,7 +67,7 @@ let simpleExample = {
 render(<EmbedID url='http://localhost:3111' handleResponse={handleResponse} customFields={simpleExample} handleSubmit={handleSubmit} />, 
 ```
 
-Your custom fields should be constructed following the schema outlined by [react-jsonschema-form](https://react-jsonschema-form.readthedocs.io/en/latest/#usage), giving you complete control over the data you collect. 
+If you choose to include custom fields, they should be constructed following the schema outlined by [react-jsonschema-form](https://react-jsonschema-form.readthedocs.io/en/latest/#usage). This gives you complete control over the data you collect using EmbedID. 
 
 ## Learn More
 
