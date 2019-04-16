@@ -22,16 +22,13 @@ export const getFields = countryCode => async dispatch => {
     let fields = await requestFields(countryCode)
     let subdivisions = await requestSubdivisions(countryCode)
     let consents = await requestConsents(countryCode)
-    // let consentFields = generateConsentSchema(consents)
     appendConsentFields(fields, consents)
     if (fields && fields.properties) {
         recursivelyUpdateStateProvince(fields.properties, subdivisions)
     }
-    console.log({...fields})
     dispatch({
         type: GET_FIELDS,
         payload: {
-            // fields: {...fields, ...consentFields},
             fields,
             formData: {
                 countries: countryCode,
@@ -77,9 +74,8 @@ const requestConsents = async countryCode => {
     if (countryCode === '' || !countryCode) {
         return
     }
-    const URL = `${BASE_URL}/api/getConsents/${countryCode}`
+    const URL = `${BASE_URL}/api/getDetailedConsents/${countryCode}`
     let response =  await axios.get(URL)
-    // console.log(response)
     let consents = JSON.parse(response.data.response)
     return consents
 }
@@ -99,7 +95,7 @@ const generateConsentSchema = consents => {
         }
     };
     consents.forEach(x => {
-        schema.properties[x] = {title: x,  type: "boolean", default: false}
+        schema.properties[x.Name] = {title: x.Name, description: x.Text,  type: "boolean", default: false}
     })
     return schema
 }
