@@ -13,6 +13,6 @@ const store = createStore(
 
 export default function EmbedID(props) {
     return <Provider store={store}>
-        <TruliooForm handleResponse={props.handleResponse} url={props.url} />
+        <TruliooForm handleResponse={props.handleResponse} url={props.url} customFields={props.customFields} handleSubmit={props.handleSubmit} />
     </Provider>
 }

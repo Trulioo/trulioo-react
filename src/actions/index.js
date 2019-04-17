@@ -5,6 +5,7 @@ import * as R from 'ramda'
 
 let BASE_URL
 let originFieldsResponse
+let reservedFormDataKeys = new Set(["countries", "TruliooFields"])
 
 export const getCountries = (url) => async dispatch => {
     BASE_URL = url
@@ -15,21 +16,23 @@ export const getCountries = (url) => async dispatch => {
     dispatch({ type: GET_COUNTRIES, payload: JSON.parse(promise.data.response).sort() })
 }
 
-export const getFields = countryCode => async dispatch => {
+export const getFields = (countryCode, customFields) => async dispatch => {
     if (countryCode === '' || !countryCode) {
         return
     }
+    validateCustomFields(customFields)
     let fields = await requestFields(countryCode)
     let subdivisions = await requestSubdivisions(countryCode)
     let consents = await requestConsents(countryCode)
     appendConsentFields(fields, consents)
     if (fields && fields.properties) {
-        recursivelyUpdateStateProvince(fields.properties, subdivisions)
+        updateStateProvince(fields.properties, subdivisions)
     }
     dispatch({
         type: GET_FIELDS,
         payload: {
             fields,
+            customFields,
             formData: {
                 countries: countryCode,
             }
@@ -55,19 +58,8 @@ const requestSubdivisions = async countryCode => {
     const URL = `${BASE_URL}/api/getCountrySubdivisions/${countryCode}`
     let response =  await axios.get(URL)
     let subdivisions = JSON.parse(response.data.response)
-    return subdivisions.sort(subdivisionComparator)
-}
-
-const subdivisionComparator = (a, b) => {
-    let nameA = a.Name.toUpperCase()
-    let nameB = b.Name.toUpperCase()
-    if (nameA < nameB) {
-        return -1
-    }
-    if (nameA > nameB) {
-        return 1
-    }
-    return 0
+    // sorting subdivisions by 'Name'
+    return R.sortBy(R.compose(R.toLower, R.prop('Name')))(subdivisions)
 }
 
 const requestConsents = async countryCode => {
@@ -100,8 +92,8 @@ const generateConsentSchema = consents => {
     return schema
 }
 
-const recursivelyUpdateStateProvince = (obj, subdivisions) => {
-    Object.keys(obj).forEach((k) => {
+const updateStateProvince = (obj, subdivisions) => {
+    Object.keys(obj).forEach(k => {
         if (k === "StateProvinceCode") {
             obj[k] = {
                 ...obj[k],
@@ -109,7 +101,7 @@ const recursivelyUpdateStateProvince = (obj, subdivisions) => {
                 enumNames: subdivisions.map(x => x.Name)
             }
         } else if (obj[k] !== null && typeof obj[k] === 'object') {
-            recursivelyUpdateStateProvince(obj[k], subdivisions);
+            updateStateProvince(obj[k], subdivisions);
         }
     });
 }
@@ -145,13 +137,24 @@ const parseConsents = consents => {
             result.push(x)
         }
     }) 
-    return result
+}
+
+const validateCustomFields = (customFields) => {
+    if (customFields) {
+        Object.keys(customFields).forEach(key => {
+            console.log(key)
+            if (reservedFormDataKeys.has(key)) {
+                console.log("reserved!")
+                throw Error(key + " is a reserved field key. Please use another key for your custom field.")
+            }
+        })
+    } 
 }
 
 const parseFormDataAdditionalFields = (obj, formData) => {
     Object.keys(obj).forEach(key => {
-        if (key === 'AdditionalFields') {
-            //getFormData equivillant value
+        if (key === 'AdditionalFields') { 
+            //getFormData equivalent value
             const additionalFieldsObj = obj[key]
             const additionalFieldsKeys = Object.keys(additionalFieldsObj.properties.properties)
 
@@ -181,10 +184,10 @@ const findObjInFormDataByKey = (formData, wantedKey) => {
     })
 }
 
-export const submitForm = (form) => async () => {
-    parseFormDataAdditionalFields(originFieldsResponse, form.formData)
-    const body = getBody(form.formData)
-    console.log(body)
+export const submitForm = (formData) => async () => {
+    let truliooFormData = parseTruliooFields(formData)
+    parseFormDataAdditionalFields(originFieldsResponse, truliooFormData)
+    const body = getBody(truliooFormData)
     const URL = `${BASE_URL}/api/verify`
     const promiseResult = await axios.post(URL, body).then(response => {
         return {
@@ -196,20 +199,20 @@ export const submitForm = (form) => async () => {
 }
 
 const parseFormData = (form) => {
-    if (form.Properties.Document) {
-        var docFront = form.Properties.Document.DocumentFrontImage
-        form.Properties.Document.DocumentFrontImage = docFront.substr(docFront.indexOf(',') + 1)
-        var docBack = form.Properties.Document.DocumentBackImage
+    if (form.TruliooFields.Document) {
+        var docFront = form.TruliooFields.Document.DocumentFrontImage
+        form.TruliooFields.Document.DocumentFrontImage = docFront.substr(docFront.indexOf(',') + 1)
+        var docBack = form.TruliooFields.Document.DocumentBackImage
         if (docBack) {
-            form.Properties.Document.DocumentBackImage = docBack.substr(docBack.indexOf(',') + 1)
+            form.TruliooFields.Document.DocumentBackImage = docBack.substr(docBack.indexOf(',') + 1)
         }
-        var livePhoto = form.Properties.Document.LivePhoto
+        var livePhoto = form.TruliooFields.Document.LivePhoto
         if (livePhoto) {
-            form.Properties.Document.LivePhoto = livePhoto.substr(livePhoto.indexOf(',') + 1)
+            form.TruliooFields.Document.LivePhoto = livePhoto.substr(livePhoto.indexOf(',') + 1)
         }
     }
-    if (form.Properties.NationalIds) {
-        form.Properties.NationalIds = [form.Properties.NationalIds]
+    if (form.TruliooFields.NationalIds) {
+        form.TruliooFields.NationalIds = [form.TruliooFields.NationalIds]
     }
     return form
 }
@@ -223,6 +226,16 @@ const parseAllFields = (obj) => {
     let parsedFields = parseFields(obj)
     removeAdditionalFields(parsedFields)
     return parsedFields
+}
+
+const parseTruliooFields = (formData) => {
+    let truliooFields = {}
+    Object.keys(formData).forEach(key => {
+        if (reservedFormDataKeys.has(key)) {
+            truliooFields[key] = formData[key]
+        } 
+    })
+    return truliooFields
 }
 
 const parseFields = (obj) => {

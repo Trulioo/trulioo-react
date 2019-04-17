@@ -7,8 +7,8 @@ import * as mocker from './mock_api'
 jest.mock('axios') 
 mocker.mockApi()
 
-it('renders countries as select', async () => {
-  const embedID = await renderer.create(<EmbedID url='http://localhost:3111' handleResponse={(e) => { }} />);
+it('renders countries as a select element', async () => {
+  const embedID = await renderer.create(<EmbedID url='http://localhost:3111' handleResponse={e => { }} />);
   expect(axios.get).toBeCalled();
   const instance = embedID.root;
 
