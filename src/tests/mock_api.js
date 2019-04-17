@@ -17,10 +17,10 @@ export const mockApi = () => {
         if (url.includes('getFields')) {
             return Promise.resolve(response(fields))
         }
-        if (url.includes('countrysubdivisions')) {
+        if (url.includes('getCountrySubdivisions')) {
             return Promise.resolve(response(subDivisions))
         } 
-        if (url.includes('getConsents')) {
+        if (url.includes('getDetailedConsents')) {
             return Promise.resolve(response(consents))
         } 
       });

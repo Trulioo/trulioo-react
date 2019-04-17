@@ -13,7 +13,7 @@ const middlewares = [thunk]
 const mockStore = configureMockStore(middlewares)
 
 describe('async actions', async () => {
-  it('getCountries makes get requests and dispatches correct action', () => {
+  it('getFields makes get requests and dispatches correct action', () => {
     const expectedActions = [{ type: types.GET_FIELDS }]
     const store = mockStore({  })
 
