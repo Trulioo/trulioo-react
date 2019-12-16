@@ -54,7 +54,9 @@ export class TruliooForm extends React.Component {
           onChange={(e) => this.handleChange(e)}
           onSubmit={(e) => this.handleSubmit(e)}
           formData={formData}
-        />
+        >
+          <button className="btn btn-info" type="submit">{this.props.buttonName}</button>
+        </Form>
       </div>
     );
   }

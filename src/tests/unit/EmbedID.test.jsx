@@ -130,4 +130,26 @@ describe('EmbedID events function properly', () => {
     const svg = container.querySelector('svg');
     expect(svg.getAttribute('data-prefix')).toBe('fas');
   });
+
+  it('renders EmbedID with pre-defined button label', async () => {
+    const proxyURL = 'http://localhost:3111';
+    const uiSchema = {
+      countries: {
+        'ui:title': 'Please select your country of residence: ',
+        'ui:description': 'Country Selection',
+      },
+    };
+    const buttonName = 'CustomButton';
+
+    const { container } = render(
+      <EmbedID
+        url={proxyURL}
+        getFields={jest.fn()}
+        submitForm={jest.fn()}
+        buttonName={buttonName}
+        uiSchema={uiSchema}
+      />,
+    );
+    expect(getByText(container, new RegExp(buttonName)));
+  });
 });

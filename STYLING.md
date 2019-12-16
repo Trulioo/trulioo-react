@@ -170,3 +170,11 @@ const uiSchema = {
   },
 };
 ```
+
+## Customize Submit button
+
+```
+<EmbedID
+  buttonName="Customized Verify"
+/>
+  ```
