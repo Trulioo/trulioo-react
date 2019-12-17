@@ -5,10 +5,10 @@ import {
 } from '../../actions/index';
 import { GET_FIELDS } from '../../actions/types';
 import { mockApiWithDetailedConstents, mockApiWithoutConsents } from './mockApi';
-import formSubmitDocV from './mock_payloads/formSubmitDocV';
-import formSubmitPayloadWithConsents from './mock_payloads/formSubmitWithConsents';
-import verifyResponseWithConsents from './mock_payloads/verifyResponseWithConsents';
-import additionalFields from './mock_payloads/additionalFields';
+import formSubmitDocV from './mock_payloads/formSubmitDocV.json';
+import formSubmitPayloadWithConsents from './mock_payloads/formSubmitWithConsents.json';
+import verifyResponseWithConsents from './mock_payloads/verifyResponseWithConsents.json';
+import additionalFields from './mock_payloads/additionalFields.json';
 
 // mocking proxy server responses
 jest.mock('axios');

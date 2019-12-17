@@ -68,7 +68,7 @@
     "redux-mock-store": "^1.5.3",
     "semantic-release": "^15.13.24",
     "style-loader": "^1.0.0",
-    "stylelint": "^11.1.1",
+    "stylelint": "^12.0.0",
     "stylelint-config-recommended": "^3.0.0",
     "stylelint-config-styled-components": "^0.1.1",
     "stylelint-processor-styled-components": "^1.8.0",
@@ -125,5 +125,5 @@
   },
   "jest": {
     "testEnvironment": "jsdom"
- }
+  }
 }
