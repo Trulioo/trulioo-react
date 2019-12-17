@@ -1,10 +1,10 @@
 /* istanbul ignore file */
 import axios from 'axios';
-import getCountryCodes from './mock_payloads/getCountryCodes';
-import getRecommendedFields from './mock_payloads/getRecommendedFields';
-import getCountrySubdivisions from './mock_payloads/getCountrySubdivisions';
-import getDetailedConsents from './mock_payloads/getDetailedConsents';
-import verifyResponse from './mock_payloads/verifyResponse';
+import getCountryCodes from './mock_payloads/getCountryCodes.json';
+import getRecommendedFields from './mock_payloads/getRecommendedFields.json';
+import getCountrySubdivisions from './mock_payloads/getCountrySubdivisions.json';
+import getDetailedConsents from './mock_payloads/getDetailedConsents.json';
+import verifyResponse from './mock_payloads/verifyResponse.json';
 
 const response = (data) => ({ status: 200, data: { response: data } });
 

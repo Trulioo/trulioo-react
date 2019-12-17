@@ -125,5 +125,5 @@
   },
   "jest": {
     "testEnvironment": "jsdom"
- }
+  }
 }
