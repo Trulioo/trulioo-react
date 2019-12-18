@@ -38,7 +38,7 @@ describe('EmbedID renders correctly', () => {
     };
     const embedID = TestRenderer.create(
       <EmbedID
-        url="http://localhost:3111"
+        url={process.env.BASE_URL}
         handleResponse={() => { }}
         handleSubmit={() => { }}
         additionalFields={sectionExamplePayload}
@@ -132,7 +132,6 @@ describe('EmbedID events function properly', () => {
   });
 
   it('renders EmbedID with pre-defined button label', async () => {
-    const proxyURL = 'http://localhost:3111';
     const uiSchema = {
       countries: {
         'ui:title': 'Please select your country of residence: ',
@@ -143,13 +142,13 @@ describe('EmbedID events function properly', () => {
 
     const { container } = render(
       <EmbedID
-        url={proxyURL}
+        url={process.env.BASE_URL}
         getFields={jest.fn()}
         submitForm={jest.fn()}
         buttonName={buttonName}
         uiSchema={uiSchema}
       />,
     );
-    expect(getByText(container, new RegExp(buttonName)));
+    expect(getByText(container, buttonName));
   });
 });

@@ -49,6 +49,7 @@
     "css-loader": "^3.0.0",
     "cz-conventional-changelog": "^3.0.2",
     "doctoc": "^1.4.0",
+    "dotenv-webpack": "^1.7.0",
     "emotion": "^10.0.6",
     "eslint": "^6.5.0",
     "eslint-config-airbnb": "^18.0.1",
@@ -124,6 +125,9 @@
     }
   },
   "jest": {
+    "setupFiles": [
+      "dotenv/config"
+    ],
     "testEnvironment": "jsdom"
   }
 }

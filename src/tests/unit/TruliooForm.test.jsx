@@ -1,12 +1,10 @@
 import React from 'react';
 import TestRenderer from 'react-test-renderer';
-import { render, getByText } from '@testing-library/react';
 import { TruliooForm, mapStateToProps } from '../../components/TruliooForm';
-import EmbedID from '../../EmbedID';
 
 describe('TruliooForm works correctly', () => {
   it('renders and node server URL are set correctly', async () => {
-    const proxyURL = 'http://localhost:3111';
+    const proxyURL = process.env.BASE_URL;
     const truliooForm = TestRenderer.create(
       <TruliooForm
         url={proxyURL}
@@ -23,7 +21,7 @@ describe('TruliooForm works correctly', () => {
   });
 
   it('renders TruliooForm', async () => {
-    const proxyURL = 'http://localhost:3111';
+    const proxyURL = process.env.BASE_URL;
     const truliooForm = TestRenderer.create(
       <TruliooForm
         url={proxyURL}
