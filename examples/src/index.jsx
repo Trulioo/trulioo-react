@@ -73,10 +73,9 @@ const whiteListedTruliooFields = {
     },
   },
 };
-
 render(
   <EmbedID
-    url="http://localhost:3111"
+    url={process.env.BASE_URL}
     handleResponse={handleResponse}
     handleSubmit={handleSubmit}
     whiteListedTruliooFields={whiteListedTruliooFields}

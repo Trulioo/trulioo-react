@@ -4,7 +4,7 @@ import { TruliooForm, mapStateToProps } from '../../components/TruliooForm';
 
 describe('TruliooForm works correctly', () => {
   it('renders and node server URL are set correctly', async () => {
-    const proxyURL = 'http://localhost:3111';
+    const proxyURL = process.env.BASE_URL;
     const truliooForm = TestRenderer.create(
       <TruliooForm
         url={proxyURL}
@@ -21,7 +21,7 @@ describe('TruliooForm works correctly', () => {
   });
 
   it('renders TruliooForm', async () => {
-    const proxyURL = 'http://localhost:3111';
+    const proxyURL = process.env.BASE_URL;
     const truliooForm = TestRenderer.create(
       <TruliooForm
         url={proxyURL}

@@ -38,7 +38,7 @@ describe('EmbedID renders correctly', () => {
     };
     const embedID = TestRenderer.create(
       <EmbedID
-        url="http://localhost:3111"
+        url={process.env.BASE_URL}
         handleResponse={() => { }}
         handleSubmit={() => { }}
         additionalFields={sectionExamplePayload}
@@ -129,5 +129,26 @@ describe('EmbedID events function properly', () => {
     const { container } = render(<EmbedID uiSchema={uiSchema} />);
     const svg = container.querySelector('svg');
     expect(svg.getAttribute('data-prefix')).toBe('fas');
+  });
+
+  it('renders EmbedID with pre-defined button label', async () => {
+    const uiSchema = {
+      countries: {
+        'ui:title': 'Please select your country of residence: ',
+        'ui:description': 'Country Selection',
+      },
+    };
+    const buttonName = 'CustomButton';
+
+    const { container } = render(
+      <EmbedID
+        url={process.env.BASE_URL}
+        getFields={jest.fn()}
+        submitForm={jest.fn()}
+        buttonName={buttonName}
+        uiSchema={uiSchema}
+      />,
+    );
+    expect(getByText(container, buttonName));
   });
 });

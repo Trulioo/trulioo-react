@@ -10,7 +10,8 @@ import TruliooForm from './components/TruliooForm';
 const store = createStore(reducers, applyMiddleware(reduxThunk));
 
 export default function EmbedID({
-  handleResponse, url, handleSubmit, additionalFields, whiteListedTruliooFields, uiSchema,
+  handleResponse, url, handleSubmit, additionalFields,
+  whiteListedTruliooFields, uiSchema, buttonName,
 }) {
   return (
     <Provider store={store}>
@@ -21,6 +22,7 @@ export default function EmbedID({
         additionalFields={additionalFields}
         uiSchema={uiSchema}
         whiteListedTruliooFields={whiteListedTruliooFields}
+        buttonName={buttonName}
       />
     </Provider>
   );
@@ -33,6 +35,7 @@ EmbedID.propTypes = {
   additionalFields: PropTypes.objectOf(PropTypes.object),
   whiteListedTruliooFields: PropTypes.objectOf(PropTypes.object),
   uiSchema: PropTypes.objectOf(PropTypes.object),
+  buttonName: PropTypes.string,
 };
 
 EmbedID.defaultProps = {
@@ -42,4 +45,5 @@ EmbedID.defaultProps = {
   additionalFields: undefined,
   whiteListedTruliooFields: undefined,
   uiSchema: undefined,
+  buttonName: 'Submit',
 };

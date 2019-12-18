@@ -2,8 +2,7 @@ import axios from 'axios';
 
 // proxy server must be running for these integration tests to pass successfully
 // adjust the BASE_URL to match the address of your proxy server
-const BASE_URL = 'http://localhost:3111';
-
+const { BASE_URL } = process.env;
 const makeRequest = async (endpoint) => {
   const URL = BASE_URL + endpoint;
   try {
