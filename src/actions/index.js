@@ -13,13 +13,22 @@ const dateFieldsMap = new Map();
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
 
 let BASE_URL;
+let apiHeaders;
+
 const reservedFormDataKeys = ['countries', 'TruliooFields', 'Consents'];
 
 const getCountries = (url) => async (dispatch) => {
   BASE_URL = url;
 
+  const accessToken = window && window.Trulioo && window.Trulioo.accessToken;
+  const publicKey = window && window.Trulioo && window.Trulioo.publicKey;
+  apiHeaders = {
+    accessToken,
+    publicKey,
+  };
+
   const URL = `${BASE_URL}/api/getcountrycodes`;
-  const promise = await axios.get(URL);
+  const promise = await axios.get(URL, { headers: apiHeaders });
   dispatch({
     type: GET_COUNTRIES,
     payload: promise.data.response.sort(),
@@ -102,7 +111,7 @@ const parseFieldDates = (obj) => {
 
 const requestFields = async (countryCode) => {
   const URL = `${BASE_URL}/api/getrecommendedfields/${countryCode}`;
-  const response = await axios.get(URL);
+  const response = await axios.get(URL, { headers: apiHeaders });
   const parsedFields = parseFields(response.data.response);
 
   const copiedParsedFields = deepCopy(parsedFields);
@@ -126,7 +135,7 @@ const updateStateProvince = (obj, subdivisions) => {
 
 const requestSubdivisions = async (countryCode) => {
   const URL = `${BASE_URL}/api/getcountrysubdivisions/${countryCode}`;
-  const response = await axios.get(URL);
+  const response = await axios.get(URL, { headers: apiHeaders });
   const subdivisions = response.data.response;
 
   // sorting subdivisions by 'Name'
@@ -140,7 +149,7 @@ const requestSubdivisions = async (countryCode) => {
 
 async function requestConsents(countryCode) {
   const URL = `${BASE_URL}/api/getdetailedconsents/${countryCode}`;
-  const response = await axios.get(URL);
+  const response = await axios.get(URL, { headers: apiHeaders });
   const consents = response.data.response;
   return consents;
 }
@@ -355,7 +364,7 @@ const submitForm = (form) => async () => {
   const truliooFormData = parseTruliooFields(formClone);
   const body = getSubmitBody(truliooFormData);
   const URL = `${BASE_URL}/api/verify`;
-  const promiseResult = await axios.post(URL, body).then((response) => ({
+  const promiseResult = await axios.post(URL, body, { headers: apiHeaders }).then((response) => ({
     ...response,
     body,
   }));
