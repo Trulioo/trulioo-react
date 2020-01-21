@@ -22,7 +22,7 @@ yarn-error.log*
 
 # IDE
 .vscode/
-.vscode/settings.json
+.vscode/*
 
 # generated files after transpilation step
 /actions
