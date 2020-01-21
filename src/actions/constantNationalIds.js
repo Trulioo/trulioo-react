@@ -1,3 +1,5 @@
+// TODO - add tests for RND1-701
+
 const idTypes = {
   nationalId: 'NationalID',
   health: 'Health',

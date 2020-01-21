@@ -2,6 +2,8 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-restricted-syntax */
 
+// TODO - add tests for RND1-701
+
 import axios from 'axios';
 import * as R from 'ramda';
 import { GET_COUNTRIES, GET_FIELDS } from './types';
@@ -263,6 +265,7 @@ const getWhiteListedFieldsOnly = (fields, whiteListedTruliooFields, whiteListedC
   return whiteListedComputedFields;
 };
 
+// TODO - add tests for RND1-701: add tests for this function
 const transformNationalIdsForCountry = (nationalIds, countryCode) => {
   if (constantNationalIds[countryCode]) {
     // change the description for the field to use constant national id names
@@ -325,6 +328,7 @@ const getCountryCode = (form) => {
   }
 };
 
+// TODO - add tests for RND1-701: add tests for this function
 // get the GG type from the constant using the national id name that was put into form Type select
 const getNationalIdsForGG = (nationalIds, countryCode) => {
   if (constantNationalIds[countryCode] && nationalIds.Type) {
