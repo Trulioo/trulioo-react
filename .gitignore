@@ -23,6 +23,7 @@ yarn-error.log*
 # IDE
 .vscode/
 
+
 # generated files after transpilation step
 /actions
 /components
