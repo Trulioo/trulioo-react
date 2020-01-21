@@ -67,18 +67,13 @@ const mergeObjectsWithSameKey = (...objects) => objects.reduce((combinedObject, 
   return combinedObject;
 });
 
-// GG national ID names are not accurate to the actual names for each country, so we
-// map them ourselves until a solution is provided through GG
-const combineTypesToSingleObject = () => {
-  const nationalIdObject = convertToNameTypeObjectArray(nationalIdNamesByCountry, idTypes.nationalId);
-  const healthObject = convertToNameTypeObjectArray(healthNamesByCountry, idTypes.health);
-  const socialServiceObject = convertToNameTypeObjectArray(socialServiceNamesByCountry, idTypes.socialService);
-  const taxIdObject = convertToNameTypeObjectArray(taxIdNumberNamesByCountry, idTypes.taxIdNumber);
-
-  return mergeObjectsWithSameKey(nationalIdObject, healthObject, socialServiceObject, taxIdObject);
-};
-
 /**
+ * GG national ID names are not accurate to the actual names for each country, so we
+ * map them ourselves until a solution is provided through GG.
+ *
+ * For example, social security number is given for many countries where it's not called
+ * social security number.
+ *
  * Returns object of the form
  *
  * {
@@ -92,4 +87,13 @@ const combineTypesToSingleObject = () => {
  *  ...
  * }
  */
+const combineTypesToSingleObject = () => {
+  const nationalIdObject = convertToNameTypeObjectArray(nationalIdNamesByCountry, idTypes.nationalId);
+  const healthObject = convertToNameTypeObjectArray(healthNamesByCountry, idTypes.health);
+  const socialServiceObject = convertToNameTypeObjectArray(socialServiceNamesByCountry, idTypes.socialService);
+  const taxIdObject = convertToNameTypeObjectArray(taxIdNumberNamesByCountry, idTypes.taxIdNumber);
+
+  return mergeObjectsWithSameKey(nationalIdObject, healthObject, socialServiceObject, taxIdObject);
+};
+
 module.exports = combineTypesToSingleObject();
