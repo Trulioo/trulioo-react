@@ -1,5 +1,3 @@
 {
-    "eslint.autoFixOnSave": true,
-    "editor.formatOnSave": true,
-    "javascript.format.enable": false
+  "eslint.autoFixOnSave": true
 }
