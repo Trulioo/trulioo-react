@@ -42,34 +42,38 @@ const taxIdNumberNamesByCountry = {
   RU: 'Taxpayer Personal Identification Number, INN (12 digits)',
 };
 
-const convertToNameTypeObject = (natIdNameObject, type) =>
-  Object.fromEntries(
-    Object.entries(natIdNameObject).map((natIdEntry) => {
-      natIdEntry[1] = [
-        {
-          name: natIdEntry[1],
-          type,
-        }
-      ];
-      return natIdEntry;
-    }),
-  )
+const convertToNameTypeObject = (natIdNameObject, type) => Object.fromEntries(
+  Object.entries(natIdNameObject).map((natIdEntry) => {
+    // eslint-disable-next-line no-param-reassign
+    natIdEntry[1] = [
+      {
+        name: natIdEntry[1],
+        type,
+      },
+    ];
+    return natIdEntry;
+  }),
+);
 
-const mergeObjectsWithSameKey = (...objects) => {
-  return objects.reduce((combinedObject, currentObject) => {
-    Object.keys(currentObject).forEach((key) => {
-      combinedObject[key] = combinedObject[key] ? combinedObject[key].concat(currentObject[key]) : currentObject[key];
-    });
-    return combinedObject;
+const mergeObjectsWithSameKey = (...objects) => objects.reduce((combinedObject, currentObject) => {
+  Object.keys(currentObject).forEach((key) => {
+    // eslint-disable-next-line no-param-reassign
+    combinedObject[key] = combinedObject[key]
+      ? combinedObject[key].concat(currentObject[key])
+      : currentObject[key];
   });
-};
+  return combinedObject;
+});
 
 // GG national ID names are not accurate to the actual names for each country, so we
 // map them ourselves until a solution is provided through GG
 const combineTypesToSingleObject = () => {
   const nationalIdObject = convertToNameTypeObject(nationalIdNamesByCountry, idTypes.nationalId);
   const healthObject = convertToNameTypeObject(healthNamesByCountry, idTypes.health);
-  const socialServiceObject = convertToNameTypeObject(socialServiceNamesByCountry, idTypes.socialService);
+  const socialServiceObject = convertToNameTypeObject(
+    socialServiceNamesByCountry,
+    idTypes.socialService,
+  );
   const taxIdObject = convertToNameTypeObject(taxIdNumberNamesByCountry, idTypes.taxIdNumber);
 
   return mergeObjectsWithSameKey(nationalIdObject, healthObject, socialServiceObject, taxIdObject);
