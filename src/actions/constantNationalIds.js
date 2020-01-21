@@ -72,7 +72,7 @@ const mergeObjectsWithSameKey = (...objects) => objects.reduce((combinedObject, 
  * map them ourselves until a solution is provided through GG.
  *
  * For example, social security number is given for many countries where it's not called
- * social security number.
+ * social security number (Russia is SNILS, GG gives SSN, etc.).
  *
  * Returns object of the form
  *
