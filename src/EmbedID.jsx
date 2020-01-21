@@ -11,7 +11,7 @@ const store = createStore(reducers, applyMiddleware(reduxThunk));
 
 export default function EmbedID({
   handleResponse, url, handleSubmit, additionalFields,
-  whiteListedTruliooFields, uiSchema, buttonName, selectedCountry,
+  whiteListedTruliooFields, uiSchema, buttonName,
 }) {
   return (
     <Provider store={store}>
@@ -23,7 +23,6 @@ export default function EmbedID({
         uiSchema={uiSchema}
         whiteListedTruliooFields={whiteListedTruliooFields}
         buttonName={buttonName}
-        selectedCountry={selectedCountry}
       />
     </Provider>
   );
@@ -37,7 +36,6 @@ EmbedID.propTypes = {
   whiteListedTruliooFields: PropTypes.objectOf(PropTypes.object),
   uiSchema: PropTypes.objectOf(PropTypes.object),
   buttonName: PropTypes.string,
-  selectedCountry: PropTypes.string,
 };
 
 EmbedID.defaultProps = {
@@ -48,5 +46,4 @@ EmbedID.defaultProps = {
   whiteListedTruliooFields: undefined,
   uiSchema: undefined,
   buttonName: 'Submit',
-  selectedCountry: undefined,
 };

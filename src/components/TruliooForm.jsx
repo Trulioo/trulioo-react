@@ -7,9 +7,14 @@ import { jsx, css } from '@emotion/core';
 import { getCountries, getFields, submitForm } from '../actions';
 
 export class TruliooForm extends React.Component {
-  componentDidMount() {
+  async componentDidMount() {
     if (this.props.getCountries) {
-      this.props.getCountries(this.props.url);
+      const defaultCountry = await this.props.getCountries(
+        this.props.url, this.props.additionalFields, this.props.whiteListedTruliooFields,
+      );
+      this.props.getFields(
+        defaultCountry, this.props.additionalFields, this.props.whiteListedTruliooFields,
+      );
     }
   }
 

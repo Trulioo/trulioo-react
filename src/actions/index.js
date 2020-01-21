@@ -8,6 +8,7 @@ import { GET_COUNTRIES, GET_FIELDS } from './types';
 import {
   DAY_OF_BIRTH, MONTH_OF_BIRTH, YEAR_OF_BIRTH, DOB, DOB_TITLE,
 } from './constantDateFields';
+import getSelectedCountry from './getSelectedCountry';
 
 const dateFieldsMap = new Map();
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
@@ -23,7 +24,10 @@ const getCountryByIp = async () => {
 
 const reservedFormDataKeys = ['countries', 'TruliooFields', 'Consents'];
 
-const getCountries = (url) => async (dispatch) => {
+/**
+ * loads dropdown and fields associated based on user's IP
+*/
+const loadAndGetDefaultCountry = (url) => async (dispatch) => {
   BASE_URL = url;
 
   const accessToken = window && window.Trulioo && window.Trulioo.accessToken;
@@ -35,15 +39,18 @@ const getCountries = (url) => async (dispatch) => {
   const countryByIpResponse = await getCountryByIp();
   const countryCode = countryByIpResponse && countryByIpResponse.data
     && countryByIpResponse.data.country_code;
-  console.log('country', countryCode);
   const URL = `${BASE_URL}/api/getcountrycodes`;
   const promise = await axios.get(URL, { headers: apiHeaders });
+  const sortedCountries = promise.data.response.sort();
+  const selectedCountry = getSelectedCountry(countryCode, sortedCountries);
+
   dispatch({
     type: GET_COUNTRIES,
     payload: promise.data.response.sort(),
   });
-};
 
+  return selectedCountry;
+};
 
 const parseFields = (obj) => {
   for (const [key] of Object.entries(obj)) {
@@ -382,5 +389,5 @@ const submitForm = (form) => async () => {
 };
 
 export {
-  submitForm, getSubmitBody, getCountries, getFields,
+  submitForm, getSubmitBody, loadAndGetDefaultCountry as getCountries, getFields,
 };
