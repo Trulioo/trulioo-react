@@ -15,6 +15,12 @@ const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
 let BASE_URL;
 let apiHeaders;
 
+const getCountryByIp = async () => {
+  const URL = `${BASE_URL}/api/countryByIP`;
+  const result = await axios.get(URL, { headers: apiHeaders });
+  return result;
+};
+
 const reservedFormDataKeys = ['countries', 'TruliooFields', 'Consents'];
 
 const getCountries = (url) => async (dispatch) => {
@@ -26,7 +32,10 @@ const getCountries = (url) => async (dispatch) => {
     accessToken,
     publicKey,
   };
-
+  const countryByIpResponse = await getCountryByIp();
+  const countryCode = countryByIpResponse && countryByIpResponse.data
+    && countryByIpResponse.data.country_code;
+  console.log('country', countryCode);
   const URL = `${BASE_URL}/api/getcountrycodes`;
   const promise = await axios.get(URL, { headers: apiHeaders });
   dispatch({
@@ -34,6 +43,7 @@ const getCountries = (url) => async (dispatch) => {
     payload: promise.data.response.sort(),
   });
 };
+
 
 const parseFields = (obj) => {
   for (const [key] of Object.entries(obj)) {
