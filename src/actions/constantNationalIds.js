@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 // TODO - add tests for RND1-701
 
 const idTypes = {
@@ -70,10 +72,7 @@ const mergeObjectsWithSameKey = (...objects) => objects.reduce((combinedObject, 
 const combineTypesToSingleObject = () => {
   const nationalIdObject = convertToNameTypeObjectArray(nationalIdNamesByCountry, idTypes.nationalId);
   const healthObject = convertToNameTypeObjectArray(healthNamesByCountry, idTypes.health);
-  const socialServiceObject = convertToNameTypeObjectArray(
-    socialServiceNamesByCountry,
-    idTypes.socialService,
-  );
+  const socialServiceObject = convertToNameTypeObjectArray(socialServiceNamesByCountry, idTypes.socialService);
   const taxIdObject = convertToNameTypeObjectArray(taxIdNumberNamesByCountry, idTypes.taxIdNumber);
 
   return mergeObjectsWithSameKey(nationalIdObject, healthObject, socialServiceObject, taxIdObject);
