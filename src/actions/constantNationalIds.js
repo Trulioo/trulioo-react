@@ -42,7 +42,7 @@ const taxIdNumberNamesByCountry = {
   RU: 'Taxpayer Personal Identification Number, INN (12 digits)',
 };
 
-const convertToNameTypeObject = (natIdNameObject, type) => Object.fromEntries(
+const convertToNameTypeObjectArray = (natIdNameObject, type) => Object.fromEntries(
   Object.entries(natIdNameObject).map((natIdEntry) => {
     // eslint-disable-next-line no-param-reassign
     natIdEntry[1] = [
@@ -68,13 +68,13 @@ const mergeObjectsWithSameKey = (...objects) => objects.reduce((combinedObject, 
 // GG national ID names are not accurate to the actual names for each country, so we
 // map them ourselves until a solution is provided through GG
 const combineTypesToSingleObject = () => {
-  const nationalIdObject = convertToNameTypeObject(nationalIdNamesByCountry, idTypes.nationalId);
-  const healthObject = convertToNameTypeObject(healthNamesByCountry, idTypes.health);
-  const socialServiceObject = convertToNameTypeObject(
+  const nationalIdObject = convertToNameTypeObjectArray(nationalIdNamesByCountry, idTypes.nationalId);
+  const healthObject = convertToNameTypeObjectArray(healthNamesByCountry, idTypes.health);
+  const socialServiceObject = convertToNameTypeObjectArray(
     socialServiceNamesByCountry,
     idTypes.socialService,
   );
-  const taxIdObject = convertToNameTypeObject(taxIdNumberNamesByCountry, idTypes.taxIdNumber);
+  const taxIdObject = convertToNameTypeObjectArray(taxIdNumberNamesByCountry, idTypes.taxIdNumber);
 
   return mergeObjectsWithSameKey(nationalIdObject, healthObject, socialServiceObject, taxIdObject);
 };
