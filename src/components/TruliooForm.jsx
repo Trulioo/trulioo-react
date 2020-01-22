@@ -8,13 +8,18 @@ import { loadAndGetDefaultCountry, getFields, submitForm } from '../actions';
 
 export class TruliooForm extends React.Component {
   async componentDidMount() {
-    if (this.props.loadAndGetDefaultCountry) {
-      const defaultCountry = await this.props.loadAndGetDefaultCountry(
-        this.props.url,
-      );
-      this.props.getFields(
-        defaultCountry, this.props.additionalFields, this.props.whiteListedTruliooFields,
-      );
+    try {
+      if (this.props.loadAndGetDefaultCountry) {
+        const defaultCountry = await this.props.loadAndGetDefaultCountry(
+          this.props.url,
+        );
+        this.props.getFields(
+          defaultCountry, this.props.additionalFields, this.props.whiteListedTruliooFields,
+        );
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
     }
   }
 
