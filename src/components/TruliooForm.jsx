@@ -20,7 +20,10 @@ export class TruliooForm extends React.Component {
     /* istanbul ignore next */
     if (shouldUpdateFormData) {
       this.props.getFields(
-        e.formData.countries, this.props.additionalFields, this.props.whiteListedTruliooFields,
+        e.formData.countries,
+        this.props.additionalFields,
+        this.props.whiteListedTruliooFields,
+        e.formData.TruliooFields,
       );
     }
   };
