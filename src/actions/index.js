@@ -19,7 +19,7 @@ const dateFieldsMap = new Map();
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
 
 let BASE_URL;
-let apiHeaders;
+const apiHeaders = {};
 
 const getCountryByIp = async () => {
   try {
@@ -32,21 +32,32 @@ const getCountryByIp = async () => {
   }
 };
 
+const computeApiHeaders = (apiKey) => {
+  // these headers that are coming directly through the Window
+  const accessToken = window && window.Trulioo && window.Trulioo.accessToken;
+  const publicKey = window && window.Trulioo && window.Trulioo.publicKey;
+
+  if (accessToken) {
+    apiHeaders.accessToken = accessToken;
+  }
+  if (publicKey) {
+    apiHeaders.publicKey = publicKey;
+  }
+  if (apiKey) {
+    apiHeaders.apiKey = apiKey;
+  }
+};
+
 const reservedFormDataKeys = ['countries', 'TruliooFields', 'Consents'];
 
 /**
  * loads dropdown and fields associated based on user's IP
 */
-const loadAndGetDefaultCountry = (url) => async (dispatch) => {
+const loadAndGetDefaultCountry = (url, apiKey) => async (dispatch) => {
   BASE_URL = url;
-  const accessToken = window && window.Trulioo && window.Trulioo.accessToken;
-  const publicKey = window && window.Trulioo && window.Trulioo.publicKey;
-  apiHeaders = {
-    accessToken,
-    publicKey,
-  };
 
   try {
+    computeApiHeaders(apiKey);
     const countryByIpResponse = await getCountryByIp();
     const countryCode = countryByIpResponse && countryByIpResponse.data
       && countryByIpResponse.data.country_code;

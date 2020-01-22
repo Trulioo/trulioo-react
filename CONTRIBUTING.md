@@ -31,3 +31,7 @@ Please add your tests under `src/tests/*` for the file(s) you are trying to upda
 ## Commits
 
 Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) as means of naming commit messages.
+
+## Passing an Optional ApiKey in the headers (only for authenticated users)
+
+You can pass in the Api Key which can exist in the headers. This request should only be used for authenticated users in secure environments only.
