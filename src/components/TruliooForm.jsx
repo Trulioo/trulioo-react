@@ -4,12 +4,22 @@ import Form from 'react-jsonschema-form';
 import { getName } from 'country-list';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
-import { getCountries, getFields, submitForm } from '../actions';
+import { loadAndGetDefaultCountry, getFields, submitForm } from '../actions';
 
 export class TruliooForm extends React.Component {
-  componentDidMount() {
-    if (this.props.getCountries) {
-      this.props.getCountries(this.props.url);
+  async componentDidMount() {
+    try {
+      if (this.props.loadAndGetDefaultCountry) {
+        const defaultCountry = await this.props.loadAndGetDefaultCountry(
+          this.props.url,
+        );
+        this.props.getFields(
+          defaultCountry, this.props.additionalFields, this.props.whiteListedTruliooFields,
+        );
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
     }
   }
 
@@ -103,5 +113,5 @@ export const mapStateToProps = (state) => {
 
 export default connect(
   mapStateToProps,
-  { getCountries, getFields, submitForm },
+  { loadAndGetDefaultCountry, getFields, submitForm },
 )(TruliooForm);

@@ -10,6 +10,8 @@ import { GET_COUNTRIES, GET_FIELDS } from './types';
 import {
   DAY_OF_BIRTH, MONTH_OF_BIRTH, YEAR_OF_BIRTH, DOB, DOB_TITLE,
 } from './constantDateFields';
+
+import getSelectedCountry from './getSelectedCountry';
 import constantNationalIds from './constantNationalIds';
 import { presetTruliooFields } from './handlers/getFields';
 
@@ -19,11 +21,24 @@ const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
 let BASE_URL;
 let apiHeaders;
 
+const getCountryByIp = async () => {
+  try {
+    const URL = `${BASE_URL}/api/countryByIP`;
+    const result = await axios.get(URL, { headers: apiHeaders });
+    return result;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(`[GetCountryByIp] ${error}`);
+  }
+};
+
 const reservedFormDataKeys = ['countries', 'TruliooFields', 'Consents'];
 
-const getCountries = (url) => async (dispatch) => {
+/**
+ * loads dropdown and fields associated based on user's IP
+*/
+const loadAndGetDefaultCountry = (url) => async (dispatch) => {
   BASE_URL = url;
-
   const accessToken = window && window.Trulioo && window.Trulioo.accessToken;
   const publicKey = window && window.Trulioo && window.Trulioo.publicKey;
   apiHeaders = {
@@ -31,12 +46,25 @@ const getCountries = (url) => async (dispatch) => {
     publicKey,
   };
 
-  const URL = `${BASE_URL}/api/getcountrycodes`;
-  const promise = await axios.get(URL, { headers: apiHeaders });
-  dispatch({
-    type: GET_COUNTRIES,
-    payload: promise.data.response.sort(),
-  });
+  try {
+    const countryByIpResponse = await getCountryByIp();
+    const countryCode = countryByIpResponse && countryByIpResponse.data
+      && countryByIpResponse.data.country_code;
+    const URL = `${BASE_URL}/api/getcountrycodes`;
+    const promise = await axios.get(URL, { headers: apiHeaders });
+    const sortedCountries = promise.data.response.sort();
+    const selectedCountry = getSelectedCountry(countryCode, sortedCountries);
+
+    dispatch({
+      type: GET_COUNTRIES,
+      payload: sortedCountries,
+    });
+
+    return selectedCountry;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+  }
 };
 
 const parseFields = (obj) => {
@@ -428,5 +456,5 @@ const submitForm = (form) => async () => {
 };
 
 export {
-  submitForm, getSubmitBody, getCountries, getFields,
+  submitForm, getSubmitBody, loadAndGetDefaultCountry, getFields,
 };
