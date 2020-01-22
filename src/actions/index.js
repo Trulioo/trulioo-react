@@ -2,13 +2,17 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-restricted-syntax */
 
+// TODO - add tests for RND1-701
+
 import axios from 'axios';
 import * as R from 'ramda';
 import { GET_COUNTRIES, GET_FIELDS } from './types';
 import {
   DAY_OF_BIRTH, MONTH_OF_BIRTH, YEAR_OF_BIRTH, DOB, DOB_TITLE,
 } from './constantDateFields';
+
 import getSelectedCountry from './getSelectedCountry';
+import constantNationalIds from './constantNationalIds';
 
 const dateFieldsMap = new Map();
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
@@ -279,6 +283,32 @@ const getWhiteListedFieldsOnly = (fields, whiteListedTruliooFields, whiteListedC
   return whiteListedComputedFields;
 };
 
+// TODO - add tests for RND1-701: add tests for this function
+const transformNationalIdsForCountry = (nationalIds, countryCode) => {
+  if (constantNationalIds[countryCode]) {
+    if (nationalIds.properties) {
+      // change the description for the field to use constant national id names
+      if (nationalIds.properties.Number && nationalIds.properties.Number.description) {
+        nationalIds.properties.Number.description = constantNationalIds[countryCode]
+          .map((nationalId) => `(${nationalId.name})`)
+          .join(', ');
+      }
+      // change the Type select to use national id names instead of GG national id types
+      if (nationalIds.properties.Type && nationalIds.properties.Type.enum) {
+        nationalIds.properties.Type.enum = constantNationalIds[countryCode]
+          .map((nationalId) => nationalId.name);
+      }
+      // remove Type select if only one option in select
+      if (constantNationalIds[countryCode].length < 2 && nationalIds.properties.Type) {
+        delete nationalIds.properties.Type;
+        if (nationalIds.required && nationalIds.required.length === 2) {
+          nationalIds.required = [nationalIds.required[0]];
+        }
+      }
+    }
+  }
+};
+
 const getFields = (
   countryCode, additionalFields, whiteListedTruliooFields,
 ) => async (dispatch) => {
@@ -293,6 +323,9 @@ const getFields = (
   /* istanbul ignore else */
   if (fields && fields.properties) {
     updateStateProvince(fields.properties, subdivisions);
+    if (fields.properties.NationalIds) {
+      transformNationalIdsForCountry(fields.properties.NationalIds, countryCode);
+    }
   }
   let finalFields = fields;
   if (whiteListedTruliooFields) {
@@ -319,6 +352,25 @@ const getCountryCode = (form) => {
   }
 };
 
+// TODO - add tests for RND1-701: add tests for this function
+// get the GG type from the constant using the national id name that was put into form Type select
+const getNationalIdsForGG = (nationalIds, countryCode) => {
+  if (constantNationalIds[countryCode]) {
+    if (nationalIds.Type) {
+      return [{
+        ...nationalIds,
+        Type: constantNationalIds[countryCode]
+          .find((natIds) => natIds.name === nationalIds.Type).type,
+      }];
+    }
+    if (nationalIds.Number) {
+      return [{ ...nationalIds, Type: constantNationalIds[countryCode][0].type }];
+    }
+    return;
+  }
+  return [nationalIds];
+};
+
 const parseFormData = (form) => {
   if (form === undefined || form.TruliooFields === undefined) {
     return form;
@@ -342,7 +394,8 @@ const parseFormData = (form) => {
     }
   }
   if (form.TruliooFields.NationalIds) {
-    form.TruliooFields.NationalIds = [form.TruliooFields.NationalIds];
+    const nationalIds = form.TruliooFields.NationalIds;
+    form.TruliooFields.NationalIds = getNationalIdsForGG(nationalIds, form.countries);
   }
   return form;
 };
