@@ -26,6 +26,7 @@ const getCountryByIp = async () => {
     const result = await axios.get(URL, { headers: apiHeaders });
     return result;
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log(`[GetCountryByIp] ${error}`);
   }
 };
@@ -37,7 +38,6 @@ const reservedFormDataKeys = ['countries', 'TruliooFields', 'Consents'];
 */
 const loadAndGetDefaultCountry = (url) => async (dispatch) => {
   BASE_URL = url;
-
   const accessToken = window && window.Trulioo && window.Trulioo.accessToken;
   const publicKey = window && window.Trulioo && window.Trulioo.publicKey;
   apiHeaders = {

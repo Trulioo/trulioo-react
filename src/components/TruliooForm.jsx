@@ -8,7 +8,7 @@ import { loadAndGetDefaultCountry, getFields, submitForm } from '../actions';
 
 export class TruliooForm extends React.Component {
   async componentDidMount() {
-    if (this.props.getCountries) {
+    if (this.props.loadAndGetDefaultCountry) {
       const defaultCountry = await this.props.loadAndGetDefaultCountry(
         this.props.url,
       );
