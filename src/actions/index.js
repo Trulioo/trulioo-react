@@ -56,7 +56,7 @@ const loadAndGetDefaultCountry = (url) => async (dispatch) => {
 
     dispatch({
       type: GET_COUNTRIES,
-      payload: promise.data.response.sort(),
+      payload: sortedCountries,
     });
 
     return selectedCountry;
