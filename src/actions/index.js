@@ -11,7 +11,9 @@ import {
   DAY_OF_BIRTH, MONTH_OF_BIRTH, YEAR_OF_BIRTH, DOB, DOB_TITLE,
 } from './constantDateFields';
 import constantNationalIds from './constantNationalIds';
+import { presetTruliooFields } from './getFieldsHandlers';
 
+/* eslint-disable */
 const dateFieldsMap = new Map();
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
 
@@ -292,7 +294,7 @@ const transformNationalIdsForCountry = (nationalIds, countryCode) => {
 };
 
 const getFields = (
-  countryCode, additionalFields, whiteListedTruliooFields,
+  countryCode, additionalFields, whiteListedTruliooFields, currentTruliooFields,
 ) => async (dispatch) => {
   if (!countryCode) {
     return;
@@ -312,6 +314,9 @@ const getFields = (
   let finalFields = fields;
   if (whiteListedTruliooFields) {
     finalFields = getWhiteListedFieldsOnly(fields, whiteListedTruliooFields, {});
+  }
+  if (currentTruliooFields) {
+    presetTruliooFields(finalFields.properties, currentTruliooFields);
   }
   dispatch({
     type: GET_FIELDS,

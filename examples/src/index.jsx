@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { EmbedID } from '../../src/index';
+/* eslint-disable */
 
 const handleResponse = (e) => {
   // eslint-disable-next-line no-console
@@ -78,7 +79,6 @@ render(
     url={process.env.BASE_URL}
     handleResponse={handleResponse}
     handleSubmit={handleSubmit}
-    whiteListedTruliooFields={whiteListedTruliooFields}
     additionalFields={additionalFields}
     uiSchema={uiSchema}
   />,

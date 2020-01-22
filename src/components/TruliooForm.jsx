@@ -6,6 +6,8 @@ import { getName } from 'country-list';
 import { jsx, css } from '@emotion/core';
 import { getCountries, getFields, submitForm } from '../actions';
 
+/* eslint-disable */
+
 export class TruliooForm extends React.Component {
   componentDidMount() {
     if (this.props.getCountries) {
@@ -14,13 +16,16 @@ export class TruliooForm extends React.Component {
   }
 
   handleChange = (e) => {
+    console.log('this.props.schema', this.props.schema)
+    console.log('this.props.uiSchema', this.props.uiSchema)
     /* istanbul ignore next */
     const shouldUpdateFormData = this.props.fields.formData === undefined
       || e.formData.countries !== this.props.fields.formData.countries;
     /* istanbul ignore next */
+    const currentTruliooFields = e.formData.TruliooFields;
     if (shouldUpdateFormData) {
       this.props.getFields(
-        e.formData.countries, this.props.additionalFields, this.props.whiteListedTruliooFields,
+        e.formData.countries, this.props.additionalFields, this.props.whiteListedTruliooFields, currentTruliooFields
       );
     }
   };
