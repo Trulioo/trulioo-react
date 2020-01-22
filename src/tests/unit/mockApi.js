@@ -4,7 +4,9 @@ import getCountryCodes from './mock_payloads/getCountryCodes.json';
 import getRecommendedFields from './mock_payloads/getRecommendedFields.json';
 import getCountrySubdivisions from './mock_payloads/getCountrySubdivisions.json';
 import getDetailedConsents from './mock_payloads/getDetailedConsents.json';
+import countryByIP from './mock_payloads/countryByIP.json';
 import verifyResponse from './mock_payloads/verifyResponse.json';
+
 
 const response = (data) => ({ status: 200, data: { response: data } });
 
@@ -27,6 +29,9 @@ const mockApi = (
     }
     if (url.includes('getdetailedconsents')) {
       return Promise.resolve(response(getDetailedConsentsPayload));
+    }
+    if (url.includes('countryByIP')) {
+      return Promise.resolve(response(countryByIP));
     }
     /* istanbul ignore next */
     return Promise.reject();
