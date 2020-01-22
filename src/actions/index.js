@@ -2,7 +2,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-restricted-syntax */
 
-// TODO - add tests for RND1-701
+// TODO - add tests for RND1-701, RND1-702
 
 import axios from 'axios';
 import * as R from 'ramda';
@@ -13,7 +13,6 @@ import {
 import constantNationalIds from './constantNationalIds';
 import { presetTruliooFields } from './getFieldsHandlers';
 
-/* eslint-disable */
 const dateFieldsMap = new Map();
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
 

@@ -3,6 +3,9 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable import/prefer-default-export */
 
+// TODO - add tests for RND1-702
+
+// TODO - add tests for RND1-702, this function
 const presetTruliooFields = (schemaObj, formDataObj) => {
   for (const [formDataKey, formDataVal] of Object.entries(formDataObj)) {
     if (schemaObj[formDataKey] && !schemaObj[formDataKey].properties) {
