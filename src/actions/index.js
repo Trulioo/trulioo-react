@@ -11,7 +11,7 @@ import {
   DAY_OF_BIRTH, MONTH_OF_BIRTH, YEAR_OF_BIRTH, DOB, DOB_TITLE,
 } from './constantDateFields';
 import constantNationalIds from './constantNationalIds';
-import { presetTruliooFields } from './getFieldsHandlers';
+import { presetTruliooFields } from './handlers/getFields';
 
 const dateFieldsMap = new Map();
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
