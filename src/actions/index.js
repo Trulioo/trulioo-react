@@ -21,9 +21,13 @@ let BASE_URL;
 let apiHeaders;
 
 const getCountryByIp = async () => {
-  const URL = `${BASE_URL}/api/countryByIP`;
-  const result = await axios.get(URL, { headers: apiHeaders });
-  return result;
+  try {
+    const URL = `${BASE_URL}/api/countryByIP`;
+    const result = await axios.get(URL, { headers: apiHeaders });
+    return result;
+  } catch (error) {
+    console.log(`[GetCountryByIp] ${error}`);
+  }
 };
 
 const reservedFormDataKeys = ['countries', 'TruliooFields', 'Consents'];
@@ -40,20 +44,26 @@ const loadAndGetDefaultCountry = (url) => async (dispatch) => {
     accessToken,
     publicKey,
   };
-  const countryByIpResponse = await getCountryByIp();
-  const countryCode = countryByIpResponse && countryByIpResponse.data
-    && countryByIpResponse.data.country_code;
-  const URL = `${BASE_URL}/api/getcountrycodes`;
-  const promise = await axios.get(URL, { headers: apiHeaders });
-  const sortedCountries = promise.data.response.sort();
-  const selectedCountry = getSelectedCountry(countryCode, sortedCountries);
 
-  dispatch({
-    type: GET_COUNTRIES,
-    payload: promise.data.response.sort(),
-  });
+  try {
+    const countryByIpResponse = await getCountryByIp();
+    const countryCode = countryByIpResponse && countryByIpResponse.data
+      && countryByIpResponse.data.country_code;
+    const URL = `${BASE_URL}/api/getcountrycodes`;
+    const promise = await axios.get(URL, { headers: apiHeaders });
+    const sortedCountries = promise.data.response.sort();
+    const selectedCountry = getSelectedCountry(countryCode, sortedCountries);
 
-  return selectedCountry;
+    dispatch({
+      type: GET_COUNTRIES,
+      payload: promise.data.response.sort(),
+    });
+
+    return selectedCountry;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+  }
 };
 
 const parseFields = (obj) => {
@@ -442,5 +452,5 @@ const submitForm = (form) => async () => {
 };
 
 export {
-  submitForm, getSubmitBody, loadAndGetDefaultCountry as getCountries, getFields,
+  submitForm, getSubmitBody, loadAndGetDefaultCountry, getFields,
 };

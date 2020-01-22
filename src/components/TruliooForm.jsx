@@ -4,13 +4,13 @@ import Form from 'react-jsonschema-form';
 import { getName } from 'country-list';
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
-import { getCountries, getFields, submitForm } from '../actions';
+import { loadAndGetDefaultCountry, getFields, submitForm } from '../actions';
 
 export class TruliooForm extends React.Component {
   async componentDidMount() {
     if (this.props.getCountries) {
-      const defaultCountry = await this.props.getCountries(
-        this.props.url, this.props.additionalFields, this.props.whiteListedTruliooFields,
+      const defaultCountry = await this.props.loadAndGetDefaultCountry(
+        this.props.url,
       );
       this.props.getFields(
         defaultCountry, this.props.additionalFields, this.props.whiteListedTruliooFields,
@@ -105,5 +105,5 @@ export const mapStateToProps = (state) => {
 
 export default connect(
   mapStateToProps,
-  { getCountries, getFields, submitForm },
+  { loadAndGetDefaultCountry, getFields, submitForm },
 )(TruliooForm);
