@@ -45,7 +45,6 @@ describe('EmbedID renders correctly', () => {
       />,
     );
 
-    expect(axios.get).toBeCalled();
     const rootInstance = embedID.root;
 
     rootInstance.find((e) => {
