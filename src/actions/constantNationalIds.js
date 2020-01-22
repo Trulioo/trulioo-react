@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-// TODO - add tests for RND1-701
+// TODO - add tests for this file
 
 const idTypes = {
   nationalId: 'NationalID',
