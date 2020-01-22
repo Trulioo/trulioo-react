@@ -345,7 +345,10 @@ const getNationalIdsForGG = (nationalIds, countryCode) => {
           .find((natIds) => natIds.name === nationalIds.Type).type,
       }];
     }
-    return [{ ...nationalIds, Type: constantNationalIds[countryCode][0].type }];
+    if (nationalIds.Number) {
+      return [{ ...nationalIds, Type: constantNationalIds[countryCode][0].type }];
+    }
+    return;
   }
   return [nationalIds];
 };
