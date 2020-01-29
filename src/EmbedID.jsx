@@ -23,7 +23,6 @@ export default function EmbedID({
         uiSchema={uiSchema}
         whiteListedTruliooFields={whiteListedTruliooFields}
         buttonName={buttonName}
-        apiKey={apiKey}
       />
     </Provider>
   );

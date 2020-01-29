@@ -11,7 +11,7 @@ export class TruliooForm extends React.Component {
     try {
       if (this.props.loadAndGetDefaultCountry) {
         const defaultCountry = await this.props.loadAndGetDefaultCountry(
-          this.props.url, this.props.apiKey,
+          this.props.url
         );
         this.props.getFields(
           defaultCountry, this.props.additionalFields, this.props.whiteListedTruliooFields,

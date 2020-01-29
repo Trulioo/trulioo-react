@@ -11,7 +11,6 @@ import {
   DAY_OF_BIRTH, MONTH_OF_BIRTH, YEAR_OF_BIRTH, DOB, DOB_TITLE,
 } from './constantDateFields';
 
-import getSelectedCountry from './getSelectedCountry';
 import constantNationalIds from './constantNationalIds';
 import { presetTruliooFields } from './handlers/getFields';
 
@@ -19,59 +18,25 @@ const dateFieldsMap = new Map();
 const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
 
 let BASE_URL;
-const apiHeaders = {};
-
-const getCountryByIp = async () => {
-  try {
-    const URL = `${BASE_URL}/api/countryByIP`;
-    const result = await axios.get(URL, { headers: apiHeaders });
-    return result;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(`[GetCountryByIp] ${error}`);
-  }
-};
-
-const computeApiHeaders = (apiKey) => {
-  // these headers that are coming directly through the Window
-  const accessToken = window && window.Trulioo && window.Trulioo.accessToken;
-  const publicKey = window && window.Trulioo && window.Trulioo.publicKey;
-
-  if (accessToken) {
-    apiHeaders.accessToken = accessToken;
-  }
-  if (publicKey) {
-    apiHeaders.publicKey = publicKey;
-  }
-  if (apiKey) {
-    apiHeaders.apiKey = apiKey;
-  }
-};
 
 const reservedFormDataKeys = ['countries', 'TruliooFields', 'Consents'];
 
 /**
  * loads dropdown and fields associated based on user's IP
 */
-const loadAndGetDefaultCountry = (url, apiKey) => async (dispatch) => {
+const loadAndGetDefaultCountry = (url) => async (dispatch) => {
   BASE_URL = url;
-
   try {
-    computeApiHeaders(apiKey);
-    const countryByIpResponse = await getCountryByIp();
-    const countryCode = countryByIpResponse && countryByIpResponse.data
-      && countryByIpResponse.data.country_code;
     const URL = `${BASE_URL}/api/getcountrycodes`;
-    const promise = await axios.get(URL, { headers: apiHeaders });
+    const promise = await axios.get(URL);
     const sortedCountries = promise.data.response.sort();
-    const selectedCountry = getSelectedCountry(countryCode, sortedCountries);
 
     dispatch({
       type: GET_COUNTRIES,
       payload: sortedCountries,
     });
 
-    return selectedCountry;
+    return sortedCountries[0];
   } catch (error) {
     // eslint-disable-next-line no-console
     console.log(error);
@@ -154,7 +119,7 @@ const parseFieldDates = (obj) => {
 
 const requestFields = async (countryCode) => {
   const URL = `${BASE_URL}/api/getrecommendedfields/${countryCode}`;
-  const response = await axios.get(URL, { headers: apiHeaders });
+  const response = await axios.get(URL);
   const parsedFields = parseFields(response.data.response);
 
   const copiedParsedFields = deepCopy(parsedFields);
@@ -178,7 +143,7 @@ const updateStateProvince = (obj, subdivisions) => {
 
 const requestSubdivisions = async (countryCode) => {
   const URL = `${BASE_URL}/api/getcountrysubdivisions/${countryCode}`;
-  const response = await axios.get(URL, { headers: apiHeaders });
+  const response = await axios.get(URL);
   const subdivisions = response.data.response;
 
   // sorting subdivisions by 'Name'
@@ -192,7 +157,7 @@ const requestSubdivisions = async (countryCode) => {
 
 async function requestConsents(countryCode) {
   const URL = `${BASE_URL}/api/getdetailedconsents/${countryCode}`;
-  const response = await axios.get(URL, { headers: apiHeaders });
+  const response = await axios.get(URL);
   const consents = response.data.response;
   return consents;
 }
@@ -459,7 +424,7 @@ const submitForm = (form) => async () => {
   const truliooFormData = parseTruliooFields(formClone);
   const body = getSubmitBody(truliooFormData);
   const URL = `${BASE_URL}/api/verify`;
-  const promiseResult = await axios.post(URL, body, { headers: apiHeaders }).then((response) => ({
+  const promiseResult = await axios.post(URL, body).then((response) => ({
     ...response,
     body,
   }));
