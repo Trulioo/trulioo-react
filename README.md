@@ -103,4 +103,5 @@ Trulioo is a global identity verification company that provides secure access to
 
 Apache 2
 
+
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTrulioo%2Ftrulioo-react.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FTrulioo%2Ftrulioo-react?ref=badge_large) 
