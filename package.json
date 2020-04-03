@@ -16,7 +16,7 @@
     "kyc"
   ],
   "dependencies": {
-    "@emotion/core": "^10.0.27",
+    "@emotion/core": "^10.0.28",
     "axios": "^0.19.2",
     "country-list": "^2.1.0",
     "prop-types": "^15.7.2",
