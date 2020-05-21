@@ -62,7 +62,7 @@
     "husky": "^4.2.0",
     "jest": "^25.1.0",
     "lint-staged": "^10.0.2",
-    "prettier-eslint": "^9.0.0",
+    "prettier-eslint": "^10.0.0",
     "react": "^16.10",
     "react-dom": "^16.10",
     "react-test-renderer": "^16.7.0",
