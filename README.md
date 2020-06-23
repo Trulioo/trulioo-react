@@ -1,4 +1,4 @@
-## Project archived; Please visit https://gateway-admin.trulioo.com/ to integrate with EmbedID.
+## Project archived. Please visit https://gateway-admin.trulioo.com/ to integrate with EmbedID.
 
 # trulioo-react
 [![Github](https://github.com/trulioo/trulioo-react/workflows/Build/badge.svg)](https://github.com/trulioo/trulioo-react/workflows/Build/badge.svg) <a href='https://coveralls.io/github/Trulioo/trulioo-react'><img src='https://coveralls.io/repos/github/Trulioo/trulioo-react/badge.svg' alt='Coverage Status' /></a> [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/Trulioo/trulioo-react.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Trulioo/trulioo-react/context:javascript)
